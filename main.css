@@ -9,4 +9,8 @@
     text-align: center;
 }
 
+circle:hover {
+  stroke: black;
+}
+
 /* Include any custom CSS styling here! */
