@@ -5,6 +5,7 @@
         <title>Assignment 6 &laquo; Data Visualization Dashboard&raquo;</title>
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <link rel="stylesheet" href="main.css"/>
+        <link rel="icon" type="image/png" href="football.png" sizes="32x32">
         <!--Feel free to add more CSS files as needed-->
         <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -13,6 +14,7 @@
 <body>
     <div class="header">
         <h3>Assignment 6 &laquo; Data Visualization Dashboard &raquo;</h3>
+        <h5>A Look Into Internation Football Data from <a href="https://www.kaggle.com/martj42/international-football-results-from-1872-to-2017">Kaggle</a></h5>
     </div>
     <!--  We included a basic HTML structure for the 3 graphs here. Feel free to change this if you'd like  -->
     <div class="row">
@@ -34,6 +36,57 @@
               <svg id="my_dataviz" width="630" height="350"></svg>
             </div>
         </div>
+    </div>
+    <div class="text">
+      <ol>
+        <h5>Written Questions</h5>
+        <li>
+          This dashboard addresses the questions presented in that it visualizes the number of football games per year,
+          the winning percentage for the top 10 nations, and the top performing teams of the last two FIFA World Cups.
+
+          Note that for the last question, all teams with less than three games were omitted so that teams that won only one or two games
+          would not skew the results.
+        </li>
+        <li>
+          The D3 library was helpful in that it (1) handled the majority of the styling of most of the elements in the graph. It allows for
+          (2) highly interactive web-based visualizations, whereas most other visualizations are static and are added as images to sites.
+
+          For the specific data in this graph, it was interesting to be able to (3) graph the locations of the top performing teams,
+          which would have been extremely difficult with most other web libraries and packages.
+        </li>
+        <li>
+          The D3 library was not the best tool for creating a visualization because (1) it was not intuitive in the slightest. It took an
+          extremely long time to get the hang of, and even then I am not sure I really understand what I am doing.
+
+          Secondly, it has hard to customize elements in the graph through global css styling because the elements are all created individually by
+          javascript. As a result, most have to be styled specifically in the javascript, even if it is very repetitive.
+
+          Third, it is very hard to interpret the source code of most D3 calls in JS files. With other visualization/graphing libraries
+          (such as matplotlib), the calls are very straightforward and interpretable by the general public. Should someone want to inspect
+          the methods that a scientist/researcher took before graphing their data, it would be very difficult.
+        </li>
+
+        <h5>Accessible Data Visualization</h5>
+
+        <li>
+          Given that the nature of this assignment is to learn how to use SVG graphs instead of image graphs, we have already started off
+          on a strong foot with regards to accessibility, because the graph elements can be accessed by screen readers for those who are visually
+          impaired or blind. However, there are definitely elements of the visualization that could be improved on to make this more accessible.
+          To start off with, screen readers and other assistive technology cannot access overlays (such as those created by Tooltips), and therefore
+          miss out on a lot of the information about individual data points as stated in the reading "A Comprehensive Guide to Accessible Data Visualization". The same can be said for highly interactive layouts, as it is difficult
+          to select options and click on buttons while using those technologies. Furthermore, the descriptions and titles of the graphs are sufficient
+          for those who know what the data is, but aren't extremely descriptive, and likely would be difficult to interpret on their own. Finally, while
+          the colors chosen for the graphs were picked to maximize my own perception of the aesthetics of the site, they likely add no information to those
+          who are color-blind, and could have been chosen with greater intentionality.
+        </li>
+        <li>
+          One of the main stages in which I should have taken steps to make my dashboard more accessible is when I created the color palette for the graphs.
+          I picked it based entirely off of my own preferred colors to view, when I should have taken into account the need for increased contrast for those
+          who are visually impaired or color-blind. The main factor that kept me from changing the colors is that most fluid color scales seem to pose this problem,
+          and extremely high contrast and discrete color scales are sometimes more difficult to interpret when looking at continuous data and are also less visually
+          appealing (at least in my opinion).
+        </li>
+
     </div>
     <!--Feel free to add more JavaScript files as needed-->
     <script type="text/javascript" src="main.js"></script>
