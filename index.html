@@ -16,16 +16,29 @@
     </div>
     <!--  We included a basic HTML structure for the 3 graphs here. Feel free to change this if you'd like  -->
     <div class="row">
-        <div class="col-lg-6">
+        <div class="row1">
             <div id="graph1"></div>
-            <div id="graph2"></div><br/>
+            <div id="graph2"></div>
         </div>
-        <div class="col-lg-6">
-            <div id="graph3"></div>
+        <br/>
+        <br/>
+        <br/>
+        <h5 id="win">Top Performing Teams by Percent Wins</h5>
+        <div class="row1">
+            <div>
+              <div id="graph3"></div>
+              <button class="butto" onclick="update('win'); update2('win')">Number of Wins</button>
+              <button class="butto" onclick="update('Value'); update2('Value')">Percent Wins</button>
+            </div>
+            <div id="graph4">
+              <svg id="my_dataviz" width="630" height="350"></svg>
+            </div>
         </div>
     </div>
     <!--Feel free to add more JavaScript files as needed-->
     <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="graph3.js"></script>
+    <script type="text/javascript" src="graph4.js"></script>
 </body>
 <style>
 .myCircle:hover {

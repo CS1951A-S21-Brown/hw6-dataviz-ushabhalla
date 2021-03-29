@@ -1,7 +1,7 @@
 // Add your JavaScript code here
 const MAX_WIDTH = Math.max(1080, window.innerWidth);
 const MAX_HEIGHT = 720;
-const margin1 = {top: 40, right: 100, bottom: 40, left: 175};
+const margin1 = {top: 40, right: 100, bottom: 40, left: 60};
 
 // Assumes the same graph width, height dimensions as the example dashboard. Feel free to change these if you'd like
 let graph_1_width = (MAX_WIDTH / 2) - 10, graph_1_height = 250;
@@ -9,152 +9,10 @@ let graph_2_width = (MAX_WIDTH / 2) - 10, graph_2_height = 275;
 let graph_3_width = MAX_WIDTH / 2, graph_3_height = 575;
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 40},
-  width = 400 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+var margin = {top: 30, right: 30, bottom: 30, left: 40},
+  width = 700 - margin.left - margin.right,
+  height = 400 - margin.top/3 - margin.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#graph1")
-.append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-.append("g")
-  .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
-
-var create_list = function(obj) {
-  // console.log(obj.toString());
-  var arr = [];
-  for (var i = 1872; i <2021; i++) {
-    // console.log(obj[2020]);
-    arr.push(
-      {"key": i,
-       "val":obj[toString(i)]}
-    );
-  };
-  // console.log(arr);
-  return arr;
-};
-
-var create_yrdict = function() {
-  var years = [];
-  var dict = {};
-  d3.csv("data/football.csv", function(data) {
-    // console.log(data);
-    var yr = data.date.slice(0,4);
-    if (!(yr in dict)) {
-      dict[yr]=1;
-    }
-    else {
-      dict[yr] = dict[yr]+1;
-    }
-  });
-  // console.log(Object.keys(dict));
-
-  var years = create_list(dict);
-  // for (yr in Object.keys(dict)) {
-  //   console.log("hi");
-  //   years.push(
-  //     {"yr": yr,
-  //      "games":dict[yr]}
-  //   );
-  // };
-  // console.log(dict);
-  return years;
-};
-
-var create_windict = function() {
-  var dict = {};
-  d3.csv("data/football.csv", function(data) {
-    // console.log(data);
-    // var yr = data.date.slice(0,5);
-    if (data.home_score > data.away_score) {
-      if (!(data.home_team in dict)) {
-        dict[data.home_team] = {};
-        dict[data.home_team]["wins"]=1;
-        dict[data.home_team]["losses"]=0;
-      } else {
-        dict[data.home_team]["wins"]++;
-      }
-
-      if (!(data.away_team in dict)) {
-        dict[data.away_team] = {};
-        dict[data.away_team]["wins"]=0;
-        dict[data.away_team]["losses"]=1;
-      } else {
-        dict[data.away_team]["losses"]++;
-      }
-    } else {
-      if (!(data.home_team in dict)) {
-        dict[data.home_team] = {};
-        dict[data.home_team]["wins"]=0;
-        dict[data.home_team]["losses"]=1;
-      } else {
-        dict[data.home_team]["losses"]++;
-      }
-
-      if (!(data.away_team in dict)) {
-        dict[data.away_team] = {};
-        dict[data.away_team]["wins"]=1;
-        dict[data.away_team]["losses"]=0;
-      } else {
-        dict[data.away_team]["wins"]++;
-      }
-    }
-  });
-  // console.log(dict);
-  return dict;
-};
-
-var create_wcdict = function() {
-  var dict = {};
-  d3.csv("data/football.csv", function(data) {
-    // console.log(data);
-    var yr = data.date.slice(0,4);
-    // console.log(yr);
-    if  ((yr == "2019") || (yr == "2020")) {
-      var tourn = data.tournament;
-      // console.log(tourn);
-      if (tourn == "FIFA World Cup qualification") {
-        if (data.home_score > data.away_score) {
-          if (!(data.home_team in dict)) {
-            dict[data.home_team] = {};
-            dict[data.home_team]["wins"]=1;
-            dict[data.home_team]["losses"]=0;
-          } else {
-            dict[data.home_team]["wins"]++;
-          }
-
-          if (!(data.away_team in dict)) {
-            dict[data.away_team] = {};
-            dict[data.away_team]["wins"]=0;
-            dict[data.away_team]["losses"]=1;
-          } else {
-            dict[data.away_team]["losses"]++;
-          }
-        } else {
-          if (!(data.home_team in dict)) {
-            dict[data.home_team] = {};
-            dict[data.home_team]["wins"]=0;
-            dict[data.home_team]["losses"]=1;
-          } else {
-            dict[data.home_team]["losses"]++;
-          }
-
-          if (!(data.away_team in dict)) {
-            dict[data.away_team] = {};
-            dict[data.away_team]["wins"]=1;
-            dict[data.away_team]["losses"]=0;
-          } else {
-            dict[data.away_team]["wins"]++;
-          }
-        }
-      }
-    }
-  });
-  // console.log(dict);
-  return dict;
-};
 
 
 // connected scatter plot with tooltip
@@ -167,19 +25,19 @@ var create_graph1 = function() {
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin1.left + "," + margin.top + ")");
 
   //Read the data
-  d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/connectedscatter.csv",
+  d3.csv("graph_1.csv",
 
     // When reading the csv, I must format variables:
     function(d){
-      return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+      return { date : d3.timeParse("%Y")(d.date), value : d.value }
     },
 
     // Now I can use this dataset:
     function(data) {
-
+      // console.log(data.date);
       // Add X axis --> it is a date format
       var x = d3.scaleTime()
         .domain(d3.extent(data, function(d) { return d.date; }))
@@ -188,12 +46,37 @@ var create_graph1 = function() {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
+      svg.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," +
+                             (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .attr("id", "graph1_xlabel")
+        .text("Year");
+
       // Add Y axis
       var y = d3.scaleLinear()
-        .domain( [8000, 9200])
+        .domain( [0, 1400])
         .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .attr("id", "graph1_ylabel")
+        .style("text-anchor", "middle")
+        .text("Number of Games");
+
+
+      svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text("Number of Games Per Year");
 
       // Add the line
       svg.append("path")
@@ -206,6 +89,7 @@ var create_graph1 = function() {
           .x(function(d) { return x(d.date) })
           .y(function(d) { return y(d.value) })
         );
+
 
       // create a tooltip
       var Tooltip = d3.select("#graph1")
@@ -224,15 +108,19 @@ var create_graph1 = function() {
             .style("opacity", 1)
         };
         var mousemove = function(d) {
+          // console.log(d.date[0,6]);
           Tooltip
-            .html("Exact value: " + d.value)
-            .style("left", (d3.mouse(this)[0]+70) + "px")
+            .html(d.value + " games in " +d.date.getFullYear() )
+            .style("left", (d3.mouse(this)[0]+30) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
         };
         var mouseleave = function(d) {
           Tooltip
             .style("opacity", 0)
         };
+
+        let color = d3.scaleOrdinal()
+            .range(d3.quantize(d3.interpolateHcl("#66a0e2", "pink"), 150));
 
       // Add the points
       svg
@@ -244,8 +132,8 @@ var create_graph1 = function() {
           .attr("class", "myCircle")
           .attr("cx", function(d) { return x(d.date) } )
           .attr("cy", function(d) { return y(d.value) } )
-          .attr("r", 8)
-          .attr("stroke", "#69b3a2")
+          .attr("r", 4)
+          .attr("stroke", function(d) { return color(d.value) })
           .attr("stroke-width", 3)
           .attr("fill", "white")
           .on("mouseover", mouseover)
@@ -267,7 +155,7 @@ var create_graph2 = function() {
           "translate(" + margin.left + "," + margin.top + ")");
 
   // Parse the Data
-  d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv", function(data) {
+  d3.csv("graph_2.csv", function(data) {
 
     // sort data
     data.sort(function(b, a) {
@@ -286,12 +174,39 @@ var create_graph2 = function() {
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
 
+    svg.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+                           (height + margin.top + 20) + ")")
+      .attr("id", "graph2_xlabel")
+      .style("text-anchor", "middle")
+      .text("Country");
+
+    svg.append("text")
+      .attr("x", (width / 2))
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")
+      .style("font-size", "16px")
+      .text("Top Winning Nations");
+
     // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, 13000])
+      .domain([0, 1])
       .range([ height, 0]);
     svg.append("g")
       .call(d3.axisLeft(y));
+
+    let color = d3.scaleOrdinal()
+        .range(d3.quantize(d3.interpolateHcl("#66a0e2", "pink"), 7));
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("id", "graph2_ylabel")
+      .style("text-anchor", "middle")
+      .text("Percent Wins");
 
     // Bars
     svg.selectAll("mybar")
@@ -300,65 +215,15 @@ var create_graph2 = function() {
       .append("rect")
         .attr("x", function(d) { return x(d.Country); })
         .attr("y", function(d) { return y(d.Value); })
+        .attr("fill", function(d) { return color(d.Value) })
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.Value); })
-        .attr("fill", "#69b3a2")
+        // .attr("fill", "#69b3a2")
 
   });
 };
 
 
-var create_graph3 = function() {
-  // The svg
-  var svg = d3.select("#graph3"),
-      width = +svg.attr("width"),
-      height = +svg.attr("height");
-
-  // Map and projection
-  var projection = d3.geoMercator()
-      .scale(350) // This is the zoom
-      .translate([850, 440]); // You have to play with these values to center your map
-
-  // Path generator
-  var path = d3.geoPath()
-      .projection(projection)
-
-  // Load external data and boot
-  d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/us_states_hexgrid.geojson.json", function(data){
-
-    // Draw the map
-    svg.append("g")
-        .selectAll("path")
-        .data(data.features)
-        .enter()
-        .append("path")
-            .attr("fill", "#69a2a2")
-            .attr("d", path)
-            .attr("stroke", "white")
-
-    // Add the labels
-    svg.append("g")
-        .selectAll("labels")
-        .data(data.features)
-        .enter()
-        .append("text")
-          .attr("x", function(d){return path.centroid(d)[0]})
-          .attr("y", function(d){return path.centroid(d)[1]})
-          .text(function(d){ return d.properties.iso3166_2})
-          .attr("text-anchor", "middle")
-          .attr("alignment-baseline", "central")
-          .style("font-size", 11)
-          .style("fill", "white")
-  })
-
-};
 
 create_graph1();
 create_graph2();
-create_graph3();
-// var yr_dict = create_yrdict();
-// console.log(yr_dict);
-// var win_dict = create_windict();
-// console.log(win_dict);
-// var wc_dict = create_wcdict();
-// console.log(wc_dict);
