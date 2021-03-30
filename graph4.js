@@ -8,28 +8,26 @@ var svg1 = d3.select("#my_dataviz"),
     width = +svg1.attr("width"),
     height = +svg1.attr("height");
 
-
-
-// Map and projection
 var projection = d3.geoMercator()
-    .center([0,20])                // GPS of location to zoom on
-    .scale(99)                       // This is like the zoom
+    .center([0,20])
+    .scale(99)
     .translate([ width/2, height/2 ])
 
 d3.queue()
   .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")  // World shape
-  .defer(d3.csv, "graph_3v2.csv") // Position of circles
+  .defer(d3.csv, "graph_3v2.csv")
   .await(ready);
 
 function ready(error, dataGeo, data) {
 
-  // Add a scale for bubble size
-  var valueExtent = d3.extent(data, function(d) { return +d.Value; })
-  var size = d3.scaleSqrt()
-    .domain(valueExtent)  // What's in the data
-    .range([ 1, 50])  // Size in pixel
+  var valueExtent = d3.extent(data, function(d) {
+    return +d.Value;
+  })
 
-  // Draw the map
+  var size = d3.scaleSqrt()
+    .domain(valueExtent)
+    .range([ 1, 50])
+
   svg1.append("g")
       .selectAll("path")
       .data(dataGeo.features)
@@ -43,7 +41,6 @@ function ready(error, dataGeo, data) {
       .style("opacity", .3)
 
 
-  // Add title and explanation
   svg1
     .append("text")
       .attr("text-anchor", "end")
@@ -59,7 +56,6 @@ function ready(error, dataGeo, data) {
 
 
 function update2(selectedVar) {
-  // Add legend: circles
   var element = document.getElementById("win");
   var valuesToShow;
   if (selectedVar=='Value'){
@@ -69,7 +65,7 @@ function update2(selectedVar) {
     valuesToShow = [1,3,5]
     element.innerText = "Top Performing Teams by Number of Wins"
   }
-  // var valueExtent = d3.extent(valuesToShow, function(d) { return +d[selectedVar]; })
+
   var size1 = d3.scaleSqrt()
     .domain(valuesToShow)  // What's in the data
     .range([ 1, 50]);
@@ -85,15 +81,16 @@ function update2(selectedVar) {
     .transition()
     .duration(1000)
       .attr("cx", xCircle)
-      .attr("cy", function(d){ return height - size1(d) } )
-      .attr("r", function(d){ return +size1(d) })
+      .attr("cy", function(d) {
+        return height - size1(d)
+      })
+      .attr("r", function(d) {
+        return +size1(d)
+      })
       .style("fill", "none")
       .attr("class", "lcircs")
       .attr("stroke", "black")
 
-
-
-  // Add legend: segments
   var w1 = svg1.selectAll(".llines")
     .data(valuesToShow)
   w1
@@ -102,17 +99,23 @@ function update2(selectedVar) {
     .merge(w1)
     .transition()
     .duration(1000)
-      .attr('x1', function(d){ return xCircle + size1(d) } )
+      .attr('x1', function(d) {
+        return xCircle + size1(d)
+      })
       .attr('x2', xLabel+5)
-      .attr('y1', function(d){ return height - size1(d) } )
-      .attr('y2', function(d){ return height - size1(d) } )
+      .attr('y1', function(d) {
+        return height - size1(d)
+      })
+      .attr('y2', function(d) {
+        return height - size1(d)
+      })
       .attr('stroke', 'black')
       .attr("class", "llines")
       .style('stroke-dasharray', ('2,2'))
 
-  // Add legend: labels
   var w2 = svg1.selectAll(".llabels")
     .data(valuesToShow)
+
   w2
     .enter()
     .append("text")
@@ -120,38 +123,61 @@ function update2(selectedVar) {
     .transition()
     .duration(1000)
       .attr('x', xLabel)
-      .attr('y', function(d){ return height - size1(d) } )
+      .attr('y', function(d){
+        return height - size1(d)
+      })
       .attr("class", "llabels")
-      .text( function(d){ return d } )
+      .text( function(d){
+        return d
+      })
       .style("font-size", 10)
       .attr('alignment-baseline', 'middle')
 
 
 
   d3.csv("graph_3v2.csv", function(data) {
-    var valueExtent = d3.extent(data, function(d) { return +d[selectedVar]; })
+    var valueExtent = d3.extent(data, function(d) {
+      return +d[selectedVar];
+    })
     var size = d3.scaleSqrt()
-      .domain(valueExtent)  // What's in the data
+      .domain(valueExtent)
       .range([ 1, 50]);
-    // variable u: map data to existing bars
+
+
+      let color = d3.scaleOrdinal()
+          .range(d3.quantize(d3.interpolateHcl("#66a0e2", "pink"), 150));
+
+
     var u = svg1.selectAll(".circ")
       .data(data)
 
-    // update bars
     u
       .enter()
       .append("circle")
       .merge(u)
       .transition()
       .duration(1000)
-      .attr("cx", function(d){ return projection([+d.homelon, +d.homelat])[0] })
-      .attr("cy", function(d){ return projection([+d.homelon, +d.homelat])[1] })
-      .attr("r", function(d){ return size(+d[selectedVar]) })
+      .attr("r", function(d) {
+        return size(+d[selectedVar])
+      })
+      .attr("cx", function(d) {
+        return projection([+d.homelon, +d.homelat])[0]
+      })
+      .attr("cy", function(d) {
+        return projection([+d.homelon, +d.homelat])[1]
+      })
       .attr("class", "circ")
       .style("fill", "goldenrod")
-      .attr("stroke", function(d){ if(d[selectedVar]>2000){return "black"}else{return "none"}  })
-      .attr("stroke-width", 1)
       .attr("fill-opacity", .4)
+      .attr("stroke", function(d) {
+        if(d[selectedVar]>2000){
+          return "black"
+        } else {
+          return "none"
+        }
+      })
+      .attr("stroke-width", 1)
+
   })
 }
 

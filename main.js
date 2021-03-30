@@ -27,20 +27,20 @@ var create_graph1 = function() {
       .attr("transform",
             "translate(" + margin1.left + "," + margin.top + ")");
 
-  //Read the data
   d3.csv("graph_1.csv",
 
-    // When reading the csv, I must format variables:
     function(d){
-      return { date : d3.timeParse("%Y")(d.date), value : d.value }
+      return {
+        date : d3.timeParse("%Y")(d.date),
+        value : d.value
+      }
     },
 
-    // Now I can use this dataset:
     function(data) {
-      // console.log(data.date);
-      // Add X axis --> it is a date format
       var x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.date; }))
+        .domain(d3.extent(data, function(d) {
+          return d.date;
+        }))
         .range([ 0, width ]);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -54,7 +54,6 @@ var create_graph1 = function() {
         .attr("id", "graph1_xlabel")
         .text("Year");
 
-      // Add Y axis
       var y = d3.scaleLinear()
         .domain( [0, 1400])
         .range([ height, 0 ]);
@@ -63,8 +62,8 @@ var create_graph1 = function() {
 
       svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
         .attr("x",0 - (height / 2))
+        .attr("y", 0 - margin.left)
         .attr("dy", "1em")
         .attr("id", "graph1_ylabel")
         .style("text-anchor", "middle")
@@ -78,20 +77,23 @@ var create_graph1 = function() {
         .style("font-size", "16px")
         .text("Number of Games Per Year");
 
-      // Add the line
       svg.append("path")
         .datum(data)
         .attr("fill", "none")
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-          .curve(d3.curveBasis) // Just add that to have a curve instead of segments
-          .x(function(d) { return x(d.date) })
-          .y(function(d) { return y(d.value) })
+          .curve(d3.curveBasis)
+          .x(function(d) {
+            return x(d.date)
+          })
+          .y(function(d) {
+            return y(d.value)
+          })
         );
 
 
-      // create a tooltip
+      // tooltip
       var Tooltip = d3.select("#graph1")
         .append("div")
         .style("opacity", 0)
@@ -102,13 +104,11 @@ var create_graph1 = function() {
         .style("border-radius", "5px")
         .style("padding", "5px");
 
-        // Three function that change the tooltip when user hover / move / leave a cell
         var mouseover = function(d) {
           Tooltip
             .style("opacity", 1)
         };
         var mousemove = function(d) {
-          // console.log(d.date[0,6]);
           Tooltip
             .html(d.value + " games in " +d.date.getFullYear() )
             .style("left", (d3.mouse(this)[0]+30) + "px")
@@ -122,7 +122,6 @@ var create_graph1 = function() {
         let color = d3.scaleOrdinal()
             .range(d3.quantize(d3.interpolateHcl("#66a0e2", "pink"), 150));
 
-      // Add the points
       svg
         .append("g")
         .selectAll("dot")
@@ -130,10 +129,16 @@ var create_graph1 = function() {
         .enter()
         .append("circle")
           .attr("class", "myCircle")
-          .attr("cx", function(d) { return x(d.date) } )
-          .attr("cy", function(d) { return y(d.value) } )
+          .attr("cx", function(d) {
+            return x(d.date)
+          })
+          .attr("cy", function(d) {
+            return y(d.value)
+          })
           .attr("r", 4)
-          .attr("stroke", function(d) { return color(d.value) })
+          .attr("stroke", function(d) {
+            return color(d.value)
+          })
           .attr("stroke-width", 3)
           .attr("fill", "white")
           .on("mouseover", mouseover)
@@ -154,18 +159,17 @@ var create_graph2 = function() {
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-  // Parse the Data
   d3.csv("graph_2.csv", function(data) {
 
-    // sort data
     data.sort(function(b, a) {
       return a.Value - b.Value;
     });
 
-    // X axis
     var x = d3.scaleBand()
       .range([ 0, width ])
-      .domain(data.map(function(d) { return d.Country; }))
+      .domain(data.map(function(d) {
+        return d.Country;
+      }))
       .padding(0.2);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -189,7 +193,6 @@ var create_graph2 = function() {
       .style("font-size", "16px")
       .text("Top Winning Nations");
 
-    // Add Y axis
     var y = d3.scaleLinear()
       .domain([0, 1])
       .range([ height, 0]);
@@ -208,17 +211,23 @@ var create_graph2 = function() {
       .style("text-anchor", "middle")
       .text("Percent Wins");
 
-    // Bars
     svg.selectAll("mybar")
       .data(data)
       .enter()
       .append("rect")
-        .attr("x", function(d) { return x(d.Country); })
-        .attr("y", function(d) { return y(d.Value); })
-        .attr("fill", function(d) { return color(d.Value) })
+        .attr("x", function(d) {
+          return x(d.Country);
+        })
+        .attr("y", function(d) {
+          return y(d.Value);
+        })
+        .attr("fill", function(d) {
+          return color(d.Value);
+        })
         .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.Value); })
-        // .attr("fill", "#69b3a2")
+        .attr("height", function(d) {
+          return height - y(d.Value);
+        })
 
   });
 };

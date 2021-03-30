@@ -42,7 +42,12 @@
         <h5>Written Questions</h5>
         <li>
           This dashboard addresses the questions presented in that it visualizes the number of football games per year,
-          the winning percentage for the top 10 nations, and the top performing teams of the last two FIFA World Cups.
+          the winning percentage for the top 10 nations, and the top performing teams of the last two FIFA World Cups. In the first graph,
+          I made a connected scatter graph where each point was a (year, number of games) pair. You can hover over each point to see the
+          data numbers. In the second graph, I used a bar graph to visualize the winning percentage for the top 10 performing nations. For the third graph,
+          I again used a bar graph where each bar can be toggled between the number of wins or the winning percentage of the top performing teams,
+          where each team must have won at least 3 games. The fourth graph is a bubble map graph visualiztion of the teams on the third graph, where the
+          data is toggled in accordance with the third graph.
 
           Note that for the last question, all teams with less than three games were omitted so that teams that won only one or two games
           would not skew the results.
@@ -55,7 +60,7 @@
           which would have been extremely difficult with most other web libraries and packages.
         </li>
         <li>
-          The D3 library was not the best tool for creating a visualization because (1) it was not intuitive in the slightest. It took an
+          The D3 library was not the best tool for creating a visualization because it was not intuitive in the slightest. It took an
           extremely long time to get the hang of, and even then I am not sure I really understand what I am doing.
 
           Secondly, it has hard to customize elements in the graph through global css styling because the elements are all created individually by
